@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class GoodsViewModel extends ViewModel {
+public class ProductsViewModel extends ViewModel {
     private final MutableLiveData<String> mText;
 
-    public GoodsViewModel() {
+    public ProductsViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is Good fragment");
     }

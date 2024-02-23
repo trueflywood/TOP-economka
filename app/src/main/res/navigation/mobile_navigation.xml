@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/nav_goods"
-        android:name="com.example.flywood.ekonomka.ui.goods.GoodsFragment"
+        android:name="com.example.flywood.ekonomka.ui.goods.ProductsFragment"
         android:label="@string/menu_goods"
         tools:layout="@layout/fragment_goods" />
 </navigation>

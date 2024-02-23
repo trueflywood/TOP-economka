@@ -1,12 +1,16 @@
 package com.example.flywood.ekonomka;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -50,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
 
-            MainActivity mainActivity = (MainActivity) navController1.getContext();
+            //MainActivity mainActivity = (MainActivity) navController1.getContext();
             // Например, получить доступ к свойству rightMenu
-            Menu rightMenu = mainActivity.rightMenu;
+            // Menu rightMenu = mainActivity.rightMenu;
         });
     }
 
@@ -73,5 +77,25 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void getBarcode(View view) {
+        new AlertDialog.Builder(this)
+                .setTitle("Введите текст")
+                .setMessage("Введите текст в поле ввода")
+                .setView(LayoutInflater.from(this).inflate(R.layout.input_product, null))
+                .setPositiveButton("ОК", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+//                        EditText editText = (EditText) dialog.findViewById(R.id.your_edit_text_id);
+//                        String text = editText.getText().toString();
+                        // Обработка введенных данных
+                    }
+                })
+                .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Обработка нажатия на кнопку Отмена
+                    }
+                })
+                .show();
     }
 }

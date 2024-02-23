@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/receipt_list_unit_name"
+        android:layout_width="0dp"
+        android:layout_weight="1"
 
+        android:paddingEnd="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingStart="20dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="очень, длинное название чека который нужно будет хранить в база данных на стороне устройства"
+        android:layout_height="match_parent">
+    </TextView>
+    <TextView
+        android:id="@+id/receipt_list_unit_date"
+        android:layout_width="140dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="от 30.09.2024"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingEnd="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingStart="10dp"
+        >
+    </TextView>
 </LinearLayout>

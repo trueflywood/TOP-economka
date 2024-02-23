@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Receipt {
+    public int getId() {
+        return id;
+    }
+
+    int id;
     Date date;
 
     String name;
@@ -33,6 +38,12 @@ public class Receipt {
     }
 
     public Receipt() {
+    }
+
+    public Receipt(int id, Date date, String name) {
+        this.id = id;
+        this.date = date;
+        this.name = name;
     }
 
     public void addProduct(Product product)  {

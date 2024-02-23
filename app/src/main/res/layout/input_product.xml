@@ -3,5 +3,37 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_gravity="center|center_vertical"
+
+        android:text="test"/>
+
+    <EditText
+        android:id="@+id/product_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Товар 1"
+        android:hint="Название товара"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/product_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1234567890"
+        android:hint="штрих-код"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/product_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="428.36"
+        android:hint="Цена"
+        android:inputType="numberDecimal" />
 
 </LinearLayout>
