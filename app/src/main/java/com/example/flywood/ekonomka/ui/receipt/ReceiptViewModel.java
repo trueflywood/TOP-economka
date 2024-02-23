@@ -5,14 +5,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class ReceiptViewModel extends ViewModel {
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<String> receiptSumm;
 
     public ReceiptViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is receipt fragment");
+        receiptSumm = new MutableLiveData<>();
+        receiptSumm.setValue("= 33 000");
     }
 
     public LiveData<String> getText() {
-        return mText;
+        return receiptSumm;
     }
 }

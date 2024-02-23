@@ -1,12 +1,8 @@
 package com.example.flywood.ekonomka;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -52,17 +48,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+        navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
 
-            @Override
-            public void onDestinationChanged(
-                    @NonNull NavController navController,
-                    @NonNull NavDestination navDestination,
-                    @Nullable Bundle bundle
-            ) {
-
-
-            }
+            MainActivity mainActivity = (MainActivity) navController1.getContext();
+            // Например, получить доступ к свойству rightMenu
+            Menu rightMenu = mainActivity.rightMenu;
         });
     }
 
