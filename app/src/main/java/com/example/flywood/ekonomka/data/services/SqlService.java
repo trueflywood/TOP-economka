@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -48,22 +49,21 @@ public class SqlService extends SQLiteOpenHelper {
     }
 
     public void addReceipt(Receipt receipt) {
+        SQLiteDatabase db = this.getWritableDatabase();
         try {
-            SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put("Name", receipt.getName());
             values.put("Date", receipt.getDate().toString());
 
-            db.insert("Receipts", null ,values);
-            db.close();
-            SQLiteDatabase db2 = this.getReadableDatabase();
-            String SQLGetLastID = "select seq from sqlite_sequence where name=\"Receipts\"";
-            Cursor cursor = db2.rawQuery(SQLGetLastID, null);
-            int id = cursor.getInt(0);
-            db2.close();
-            this.addReceiptUnit(id, receipt.getReceiptList());
+            long id1 = db.insert("Receipts", null ,values);
+            Log.i("FLYWOOD", "add id = " + id1);
+
+
+            this.addReceiptUnit((int) id1, receipt.getReceiptList());
         }catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            db.close();
         }
     }
 
@@ -79,16 +79,17 @@ public class SqlService extends SQLiteOpenHelper {
                 values.put("IdReceipt", id);
                 values.put("Name", product.getName());
                 values.put("code", product.getBarcod());
-                values.put("price", (Float) product.getPrice());
-                db.insert("Receipts", null ,values);
+                values.put("price", Float.parseFloat(product.getPrice().toString()));
+                db.insert("ReceiptUnit", null ,values);
             }
 
             db.setTransactionSuccessful();
-            db.close();
+            Log.i("FLYWOOD", "Successful");
         }catch (Exception e){
             e.printStackTrace();
         } finally {
             db.endTransaction();
+            db.close();
         }
     }
 }

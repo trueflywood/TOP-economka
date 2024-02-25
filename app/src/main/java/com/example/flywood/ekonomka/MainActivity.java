@@ -5,14 +5,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.flywood.ekonomka.data.EkonomkaState;
+import com.example.flywood.ekonomka.data.Product;
+import com.example.flywood.ekonomka.data.Receipt;
+import com.example.flywood.ekonomka.data.services.SqlService;
+import com.example.flywood.ekonomka.ui.receipt.ReceiptViewModel;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -25,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
-    private  Menu rightMenu;
+    SqlService sqlService;
 
 
     @Override
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.appBarMain.toolbar);
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
+
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -52,23 +57,30 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+
+
+
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
 
-            //MainActivity mainActivity = (MainActivity) navController1.getContext();
-            // Например, получить доступ к свойству rightMenu
-            // Menu rightMenu = mainActivity.rightMenu;
+
+            Menu menu =   binding.appBarMain.toolbar.getMenu();
+            if(navDestination.getId() == R.id.nav_receipt) {
+                getMenuInflater().inflate(R.menu.main, menu);
+            }
+            else {
+                menu.clear();
+            }
+
         });
+
+        // NOTE работа с базой данных
+        sqlService = new SqlService(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        // TODO добавлять в зависимостиот экрана
-
-        this.rightMenu = menu;
-//        getMenuInflater().inflate(R.menu.main, menu);
-//
-//        menu.clear();
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -80,15 +92,61 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getBarcode(View view) {
+
+        View formView = LayoutInflater.from(this).inflate(R.layout.input_product, null);
+
         new AlertDialog.Builder(this)
-                .setTitle("Введите текст")
-                .setMessage("Введите текст в поле ввода")
-                .setView(LayoutInflater.from(this).inflate(R.layout.input_product, null))
+                .setTitle("Добавление товара")
+                .setMessage("Заполниие поля для добавления товара")
+                .setView(formView)
                 .setPositiveButton("ОК", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-//                        EditText editText = (EditText) dialog.findViewById(R.id.your_edit_text_id);
-//                        String text = editText.getText().toString();
-                        // Обработка введенных данных
+                        EditText editTextCode = formView.findViewById(R.id.product_code);
+                        EditText editTextName = formView.findViewById(R.id.product_name);
+                        EditText editTextPrice = formView.findViewById(R.id.product_price);
+
+                        String code = editTextCode.getText().toString();
+                        String name = editTextName.getText().toString();
+                        String price = editTextPrice.getText().toString();
+
+//                        if (EkonomkaState.currentReceipt == null) {
+//                            EkonomkaState.currentReceipt = new Receipt();
+//                        }
+
+
+
+                        EkonomkaState.addCurrentReceiptUnit(new Product(code, name, Float.parseFloat(price)));
+
+
+
+
+                        Toast.makeText(MainActivity.this, code, Toast.LENGTH_SHORT).show();
+
+
+
+                        // NOTE Кусок кода для проверки работы сохранения рецепта
+
+//                        Receipt receipt = new Receipt();
+//
+//                        receipt.addProduct( new Product("1234567890", "товар 1", 300));
+//                        receipt.addProduct( new Product("1234567892", "товар 2", 400));
+//                        receipt.addProduct( new Product("1234567892", "товар 2", 400));
+//                        receipt.addProduct( new Product("1234567892", "товар 2", 400));
+//                        receipt.addProduct( new Product("1234567893", "товар 3", 500));
+//                        receipt.addProduct( new Product("1234567894", "товар 3", 500));
+//                        receipt.addProduct( new Product("1234567895", "товар 3", 500));
+//                        receipt.addProduct( new Product("1234567893", "товар 3", 500));
+//                        receipt.addProduct( new Product("1234567896", "товар 3", 500));
+//                        receipt.addProduct( new Product("1234567897", "товар 3", 500));
+//                        receipt.addProduct( new Product("1234567898", "товар 3", 500));
+//                        receipt.addProduct( new Product("1234567899", "товар 3", 500));
+//                        receipt.addProduct( new Product("1234567830", "товар 3", 500));
+//
+//                        receipt.setName("test ewufieunfieunfiu qefqeoi");
+//                        receipt.setDate(new Date(2024, 2,20));
+//
+//
+//                        sqlService.addReceipt(receipt);
                     }
                 })
                 .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {

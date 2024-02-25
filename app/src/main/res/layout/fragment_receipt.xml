@@ -44,6 +44,6 @@
     android:layout_marginBottom="@dimen/fab_margin"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:srcCompat="@android:drawable/ic_dialog_email"
+    app:srcCompat="@android:drawable/ic_input_add"
         tools:ignore="ContentDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

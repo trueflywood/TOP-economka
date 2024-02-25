@@ -1,5 +1,7 @@
 package com.example.flywood.ekonomka.data;
 
+import android.widget.BaseAdapter;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +42,7 @@ public class Receipt {
     public Receipt() {
     }
 
+
     public Receipt(int id, Date date, String name) {
         this.id = id;
         this.date = date;
@@ -49,6 +52,8 @@ public class Receipt {
     public void addProduct(Product product)  {
         this.receiptList.add(product);
     }
+
+
 
 
     /**
@@ -64,6 +69,16 @@ public class Receipt {
                 .distinct()
                 .collect(Collectors.toList());
         return quantityProducts;
+    }
+
+    public Float getSumm() {
+        Float summ = 0f;
+
+        for (Product product: this.getReceiptList()) {
+            summ += Float.parseFloat(product.getPrice().toString());
+        }
+
+        return  summ;
     }
 }
 

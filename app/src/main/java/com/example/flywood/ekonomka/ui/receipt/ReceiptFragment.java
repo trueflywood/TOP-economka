@@ -3,6 +3,7 @@ package com.example.flywood.ekonomka.ui.receipt;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.flywood.ekonomka.R;
+import com.example.flywood.ekonomka.data.EkonomkaState;
 import com.example.flywood.ekonomka.data.Product;
 import com.example.flywood.ekonomka.data.QuantityProduct;
 import com.example.flywood.ekonomka.data.Receipt;
 import com.example.flywood.ekonomka.databinding.FragmentReceiptBinding;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ReceiptFragment extends Fragment {
@@ -38,27 +41,36 @@ public class ReceiptFragment extends Fragment {
         final TextView textView = binding.textReceipt;
         final ListView listView = binding.listReceipt;
 
-        Receipt receipt = new Receipt();
-
-        receipt.addProduct( new Product("1234567890", "товар 1", 300));
-        receipt.addProduct( new Product("1234567892", "товар 2", 400));
-        receipt.addProduct( new Product("1234567892", "товар 2", 400));
-        receipt.addProduct( new Product("1234567892", "товар 2", 400));
-        receipt.addProduct( new Product("1234567893", "товар 3", 500));
-        receipt.addProduct( new Product("1234567894", "товар 3", 500));
-        receipt.addProduct( new Product("1234567895", "товар 3", 500));
-        receipt.addProduct( new Product("1234567893", "товар 3", 500));
-        receipt.addProduct( new Product("1234567896", "товар 3", 500));
-        receipt.addProduct( new Product("1234567897", "товар 3", 500));
-        receipt.addProduct( new Product("1234567898", "товар 3", 500));
-        receipt.addProduct( new Product("1234567899", "товар 3", 500));
-        receipt.addProduct( new Product("1234567830", "товар 3", 500));
 
 
-        ReceiptUnitAdapter receiptUnitAdapter =new ReceiptUnitAdapter(receipt.getQuantityProduct(), this.getContext(), R.layout.receipt_unit);
+
+//        if (EkonomkaState.currentReceipt == null) {
+//            EkonomkaState.currentReceipt = new Receipt();
+//        }
+
+//        receipt.addProduct( new Product("1234567890", "товар 1", 300));
+//        receipt.addProduct( new Product("1234567892", "товар 2", 400));
+//        receipt.addProduct( new Product("1234567892", "товар 2", 400));
+//        receipt.addProduct( new Product("1234567892", "товар 2", 400));
+//        receipt.addProduct( new Product("1234567893", "товар 3", 500));
+//        receipt.addProduct( new Product("1234567894", "товар 3", 500));
+//        receipt.addProduct( new Product("1234567895", "товар 3", 500));
+//        receipt.addProduct( new Product("1234567893", "товар 3", 500));
+//        receipt.addProduct( new Product("1234567896", "товар 3", 500));
+//        receipt.addProduct( new Product("1234567897", "товар 3", 500));
+//        receipt.addProduct( new Product("1234567898", "товар 3", 500));
+//        receipt.addProduct( new Product("1234567899", "товар 3", 500));
+//        receipt.addProduct( new Product("1234567830", "товар 3", 500));
+
+
+        ReceiptUnitAdapter receiptUnitAdapter =new ReceiptUnitAdapter(EkonomkaState.getCurentReceipt(), this.getContext(), R.layout.receipt_unit);
         listView.setAdapter(receiptUnitAdapter);
 
-        receiptViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        EkonomkaState.getLiveCurentReceipt().observe(getViewLifecycleOwner(), receiptUnitAdapter::updateReceipt);
+        EkonomkaState.getLiveCurentReceiptSumm().observe(getViewLifecycleOwner(), textView::setText);
+
+
+//        receiptViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         return root;
     }
@@ -79,8 +91,9 @@ class ReceiptUnitAdapter extends BaseAdapter {
 
     LayoutInflater layoutInflater;
 
-    public ReceiptUnitAdapter(List<QuantityProduct> list, Context context, int templateLayout) {
-        quantityProductList = list;
+    public ReceiptUnitAdapter(Receipt receipt, Context context, int templateLayout) {
+        quantityProductList = receipt.getQuantityProduct();
+
         this.context = context;
         this.templateLayout = templateLayout;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -110,7 +123,14 @@ class ReceiptUnitAdapter extends BaseAdapter {
         QuantityProduct product = quantityProductList.get(position);
         name.setText(product.getName());
         code.setText(product.getBarcod());
-        countPrice.setText(product.getCount() + " x\n" + product.getPrice());
+        DecimalFormat df = new DecimalFormat("#0.00");
+        countPrice.setText(product.getCount() + " x\n" + df.format( product.getPrice()) + " р.");
         return view;
+    }
+
+    public void updateReceipt(Receipt receipt) {
+        Log.i("FLWOOD", "updateReceipt");
+        this.quantityProductList = receipt.getQuantityProduct();
+        this.notifyDataSetChanged();
     }
 }
