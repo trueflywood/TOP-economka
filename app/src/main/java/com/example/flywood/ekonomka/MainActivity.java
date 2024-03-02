@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
             Menu menu =   binding.appBarMain.toolbar.getMenu();
             if(navDestination.getId() == R.id.nav_receipt) {
-                getMenuInflater().inflate(R.menu.main, menu);
+                createReceiptMenu(menu);
             }
             else {
                 menu.clear();
@@ -125,11 +127,39 @@ public class MainActivity extends AppCompatActivity {
         sqlService = new SqlService(this);
     }
 
+
+    public boolean createReceiptMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem menuSaveItem = menu.findItem(R.id.action_favorite);
+        menuSaveItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                Toast.makeText(MainActivity.this, "Menu Save", Toast.LENGTH_SHORT).show();
+                // TODO
+                //     - сохранять список в базу
+                //
+                return true;
+            }
+        });
+
+        MenuItem menuClearItem = menu.findItem(R.id.action_clear);
+        menuClearItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                Toast.makeText(MainActivity.this, "Menu Clear", Toast.LENGTH_SHORT).show();
+                EkonomkaState.currentReceiptMutableLiveData.setValue(new Receipt());
+                return true;
+            }
+        });
+
+
+        return true;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        return createReceiptMenu(menu);
     }
 
     @Override
@@ -221,5 +251,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    public void saveReceipt(View view) {
+        Toast.makeText(this, "Menu save", Toast.LENGTH_SHORT).show();
     }
 }

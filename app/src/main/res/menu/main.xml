@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+<!--    <item-->
+<!--        android:id="@+id/action_settings"-->
+<!--        android:orderInCategory="100"-->
+<!--        android:title="@string/action_settings"-->
+<!--        app:showAsAction="never" />-->
+
+    <item android:id="@+id/action_favorite"
+        android:icon="@android:drawable/btn_star"
+        android:title="Сохранить"
+        app:showAsAction="always"/>
+<!--    <item android:id="@+id/action_sort"-->
+<!--        android:icon="@android:drawable/ic_menu_sort_by_size"-->
+<!--        android:title="Сортировка"-->
+<!--        app:showAsAction="always">-->
+<!--        <menu>-->
+<!--            <item-->
+<!--                android:id="@+id/action_sort_price"-->
+<!--                android:checkable="true"-->
+<!--                android:title="по цене"/>-->
+
+<!--            <item-->
+<!--                android:id="@+id/action_sort_name"-->
+<!--                android:checkable="true"-->
+<!--                android:title="по названию"/>-->
+<!--        </menu>-->
+<!--    </item>-->
+    <item android:id="@+id/action_clear"
+        android:icon="@android:drawable/ic_delete"
+        android:title="Удалить"
+        app:showAsAction="always"/>
 </menu>
