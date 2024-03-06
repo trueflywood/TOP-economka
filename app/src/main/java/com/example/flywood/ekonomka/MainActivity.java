@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,9 @@ import com.example.flywood.ekonomka.data.EkonomkaState;
 import com.example.flywood.ekonomka.data.Product;
 import com.example.flywood.ekonomka.data.Receipt;
 import com.example.flywood.ekonomka.data.services.SqlService;
+import com.example.flywood.ekonomka.data.services.api.ApiInterface;
+import com.example.flywood.ekonomka.data.services.api.ApiService;
+import com.example.flywood.ekonomka.data.services.api.ProductResponse;
 import com.example.flywood.ekonomka.ui.receipt.ReceiptViewModel;
 import com.google.android.material.navigation.NavigationView;
 
@@ -38,6 +42,11 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 
 import java.util.Scanner;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,7 +73,40 @@ public class MainActivity extends AppCompatActivity {
 
     private void setResult(String result) {
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+        getNameByCode(result);
     }
+
+    private void getNameByCode(String result) {
+        ApiInterface apiService = ApiService.getProductName().create(ApiInterface.class);
+        Call<ProductResponse> call = apiService.getData(result, ApiService.APIKEY);
+
+        call.enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                Log.i("Fluwood", response.body().status.toString());
+                Log.i("Fluwood", response.body().names.get(0));
+
+                String status = response.body().status.toString();
+                Log.i("Fluwood", "status equals -" + status);
+                Log.i("Fluwood", "count -" + response.body().names.stream().count());
+
+                if (status.equals("200")) {
+                    if(response.body().names.stream().count() > 0) {
+
+                        String name = response.body().names.get(0);
+                        getBarcode(name, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+
+            }
+        });
+
+    }
+
 
     private void showCamera(int cameraId) {
         ScanOptions options = new ScanOptions();
@@ -187,9 +229,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void getBarcode(View view) {
+    public void getBarcode(String name, String code) {
+
+        Log.i("Fluwood", "name - " + name);
+        Log.i("Fluwood", "code - " + code);
 
         View formView = LayoutInflater.from(this).inflate(R.layout.input_product, null);
+        EditText editTextCode = formView.findViewById(R.id.product_code);
+        EditText editTextName = formView.findViewById(R.id.product_name);
+        EditText editTextPrice = formView.findViewById(R.id.product_price);
+
+        editTextName.setText(name);
+        editTextCode.setText(code);
+        editTextPrice.setText("0.0");
 
         new AlertDialog.Builder(this)
                 .setTitle("Добавление товара")
@@ -197,9 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 .setView(formView)
                 .setPositiveButton("ОК", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        EditText editTextCode = formView.findViewById(R.id.product_code);
-                        EditText editTextName = formView.findViewById(R.id.product_name);
-                        EditText editTextPrice = formView.findViewById(R.id.product_price);
+
 
                         String code = editTextCode.getText().toString();
                         String name = editTextName.getText().toString();
