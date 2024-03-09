@@ -149,13 +149,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
-
-
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
 
-
             Menu menu =   binding.appBarMain.toolbar.getMenu();
+
             if(navDestination.getId() == R.id.nav_receipt) {
                 createReceiptMenu(menu);
             }
@@ -167,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
 
         // NOTE работа с базой данных
         sqlService = new SqlService(this);
+
+        // NOTE получение списка из базы данных
+        EkonomkaState.setSavedListReceipt(sqlService.getListReceipts());
     }
 
 
@@ -178,11 +178,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
                 Toast.makeText(MainActivity.this, "Menu Save", Toast.LENGTH_SHORT).show();
-                // TODO
-                //     - сохранять список в базу
-                //
-                saveReceipt();
 
+                saveReceipt();
 
                 return true;
             }

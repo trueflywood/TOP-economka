@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.flywood.ekonomka.R;
+import com.example.flywood.ekonomka.data.EkonomkaState;
 import com.example.flywood.ekonomka.data.Receipt;
 
 import java.text.DateFormat;
@@ -36,21 +37,11 @@ public class ProductsFragment extends Fragment {
 
         final ListView receiptListUnitList = binding.receiptListUnitList;
 
-//        galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
-
-        List<Receipt> receiptList = new ArrayList<>();
-
-        receiptList.add(new Receipt(1, Calendar.getInstance(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
-        receiptList.add(new Receipt(2, Calendar.getInstance(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
-        receiptList.add(new Receipt(3, Calendar.getInstance(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
-        receiptList.add(new Receipt(4, Calendar.getInstance(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
-        receiptList.add(new Receipt(5, Calendar.getInstance(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
-
-
-        ProductsListUnitAdapter productsListUnitAdapter =new ProductsListUnitAdapter(receiptList, this.getContext(), R.layout.receipt_list_unit);
+        ProductsListUnitAdapter productsListUnitAdapter =new ProductsListUnitAdapter(EkonomkaState.getCurrentListReceipt(), this.getContext(), R.layout.receipt_list_unit);
 
         receiptListUnitList.setAdapter(productsListUnitAdapter);
+
+        EkonomkaState.getLiveListReceipt().observe(getViewLifecycleOwner(), productsListUnitAdapter::updateListReceipt);
 
         return root;
     }
@@ -103,5 +94,11 @@ class ProductsListUnitAdapter extends BaseAdapter {
         String strDate = df.format( receipt.getDate().getTime());
        date.setText("от " + strDate);
        return view;
+    }
+
+
+    public void updateListReceipt(List<Receipt> list) {
+        this.productsList = list;
+        this.notifyDataSetChanged();
     }
 }

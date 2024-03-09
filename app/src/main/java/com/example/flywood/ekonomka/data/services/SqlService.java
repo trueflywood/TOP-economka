@@ -13,7 +13,11 @@ import com.example.flywood.ekonomka.data.Product;
 import com.example.flywood.ekonomka.data.Receipt;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class SqlService extends SQLiteOpenHelper {
@@ -69,6 +73,43 @@ public class SqlService extends SQLiteOpenHelper {
         } finally {
             db.close();
         }
+    }
+
+    public List<Receipt> getListReceipts() {
+        List<Receipt> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query("Receipts", null,null,null, null, null,null);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        if (cursor.moveToFirst()) {
+
+           int idIndex =  cursor.getColumnIndex("Id");
+           int nameIndex =  cursor.getColumnIndex("Name");
+           int dateIndex =  cursor.getColumnIndex("Date");
+           if (nameIndex >= 0 && dateIndex >= 0 && idIndex >= 0) {
+
+               do {
+                   try {
+                       int id = cursor.getInt(idIndex);
+                       String name = cursor.getString(nameIndex);
+                       String strDate = cursor.getString(dateIndex);
+
+                       Date date = df.parse(strDate);
+                       Calendar calendar = Calendar.getInstance();
+                       calendar.setTime(date);
+
+                       Receipt receipt = new Receipt(id, calendar, name);
+                       Log.i("FLYWOOD", "receipt = " + id + " | "+ strDate + " | " + name);
+                       list.add(receipt);
+                   } catch (ParseException e) {
+                       throw new RuntimeException(e);
+                   }
+
+               } while (cursor.moveToNext());
+           }
+        }
+       return list;
     }
 
     public void addReceiptUnit(int id, List<Product> receiptList) {
