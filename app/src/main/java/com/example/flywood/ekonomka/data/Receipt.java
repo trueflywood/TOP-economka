@@ -3,6 +3,7 @@ package com.example.flywood.ekonomka.data;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,17 +14,17 @@ public class Receipt {
     }
 
     int id;
-    Date date;
+    Calendar date;
 
     String name;
 
     List<Product> receiptList = new ArrayList<>();
 
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Calendar date) {
         this.date = date;
     }
 
@@ -43,7 +44,7 @@ public class Receipt {
     }
 
 
-    public Receipt(int id, Date date, String name) {
+    public Receipt(int id, Calendar date, String name) {
         this.id = id;
         this.date = date;
         this.name = name;

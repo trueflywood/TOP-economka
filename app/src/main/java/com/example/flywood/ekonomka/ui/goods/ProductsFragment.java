@@ -16,7 +16,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.flywood.ekonomka.R;
 import com.example.flywood.ekonomka.data.Receipt;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -38,11 +41,11 @@ public class ProductsFragment extends Fragment {
 
         List<Receipt> receiptList = new ArrayList<>();
 
-        receiptList.add(new Receipt(1, new Date(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
-        receiptList.add(new Receipt(2, new Date(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
-        receiptList.add(new Receipt(3, new Date(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
-        receiptList.add(new Receipt(4, new Date(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
-        receiptList.add(new Receipt(5, new Date(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
+        receiptList.add(new Receipt(1, Calendar.getInstance(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
+        receiptList.add(new Receipt(2, Calendar.getInstance(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
+        receiptList.add(new Receipt(3, Calendar.getInstance(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
+        receiptList.add(new Receipt(4, Calendar.getInstance(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
+        receiptList.add(new Receipt(5, Calendar.getInstance(), "тестовое название списка товаров для тестирования списка товаров который будет храниться в базе данных на телефоне пользователя"));
 
 
         ProductsListUnitAdapter productsListUnitAdapter =new ProductsListUnitAdapter(receiptList, this.getContext(), R.layout.receipt_list_unit);
@@ -96,7 +99,9 @@ class ProductsListUnitAdapter extends BaseAdapter {
        TextView date = view.findViewById(R.id.receipt_list_unit_date);
        Receipt receipt = productsList.get(position);
        name.setText(receipt.getName());
-       date.setText("от " + receipt.getDate().toString());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String strDate = df.format( receipt.getDate().getTime());
+       date.setText("от " + strDate);
        return view;
     }
 }

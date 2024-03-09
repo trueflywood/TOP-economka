@@ -20,11 +20,9 @@ import com.example.flywood.ekonomka.data.services.SqlService;
 import com.example.flywood.ekonomka.data.services.api.ApiInterface;
 import com.example.flywood.ekonomka.data.services.api.ApiService;
 import com.example.flywood.ekonomka.data.services.api.ProductResponse;
-import com.example.flywood.ekonomka.ui.receipt.ReceiptViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -40,10 +38,12 @@ import com.example.flywood.ekonomka.databinding.ActivityMainBinding;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
 
-import java.util.Scanner;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -181,6 +181,9 @@ public class MainActivity extends AppCompatActivity {
                 // TODO
                 //     - сохранять список в базу
                 //
+                saveReceipt();
+
+
                 return true;
             }
         });
@@ -231,8 +234,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void getBarcode(String name, String code) {
 
-        Log.i("Fluwood", "name - " + name);
-        Log.i("Fluwood", "code - " + code);
+
 
         View formView = LayoutInflater.from(this).inflate(R.layout.input_product, null);
         EditText editTextCode = formView.findViewById(R.id.product_code);
@@ -255,44 +257,10 @@ public class MainActivity extends AppCompatActivity {
                         String name = editTextName.getText().toString();
                         String price = editTextPrice.getText().toString();
 
-//                        if (EkonomkaState.currentReceipt == null) {
-//                            EkonomkaState.currentReceipt = new Receipt();
-//                        }
-
-
-
                         EkonomkaState.addCurrentReceiptUnit(new Product(code, name, Float.parseFloat(price)));
-
-
-
 
                         Toast.makeText(MainActivity.this, code, Toast.LENGTH_SHORT).show();
 
-
-
-                        // NOTE Кусок кода для проверки работы сохранения рецепта
-
-//                        Receipt receipt = new Receipt();
-//
-//                        receipt.addProduct( new Product("1234567890", "товар 1", 300));
-//                        receipt.addProduct( new Product("1234567892", "товар 2", 400));
-//                        receipt.addProduct( new Product("1234567892", "товар 2", 400));
-//                        receipt.addProduct( new Product("1234567892", "товар 2", 400));
-//                        receipt.addProduct( new Product("1234567893", "товар 3", 500));
-//                        receipt.addProduct( new Product("1234567894", "товар 3", 500));
-//                        receipt.addProduct( new Product("1234567895", "товар 3", 500));
-//                        receipt.addProduct( new Product("1234567893", "товар 3", 500));
-//                        receipt.addProduct( new Product("1234567896", "товар 3", 500));
-//                        receipt.addProduct( new Product("1234567897", "товар 3", 500));
-//                        receipt.addProduct( new Product("1234567898", "товар 3", 500));
-//                        receipt.addProduct( new Product("1234567899", "товар 3", 500));
-//                        receipt.addProduct( new Product("1234567830", "товар 3", 500));
-//
-//                        receipt.setName("test ewufieunfieunfiu qefqeoi");
-//                        receipt.setDate(new Date(2024, 2,20));
-//
-//
-//                        sqlService.addReceipt(receipt);
                     }
                 })
                 .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
@@ -303,7 +271,45 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    public void saveReceipt(View view) {
-        Toast.makeText(this, "Menu save", Toast.LENGTH_SHORT).show();
+    public void saveReceipt() {
+
+        View formView = LayoutInflater.from(this).inflate(R.layout.input_receipt_name, null);
+        EditText editTextName = formView.findViewById(R.id.receipt_name);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Сохранение рецепта")
+                .setMessage("Назовите рецепт")
+                .setView(formView)
+                .setPositiveButton("ОК", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+
+                        String receiptName = editTextName.getText().toString();
+
+                        Receipt receipt = EkonomkaState.getCurentReceipt();
+                        Calendar rightNow = Calendar.getInstance();
+                        receipt.setName(receiptName);
+                        receipt.setDate(rightNow);
+
+
+
+
+
+//                        Log.i("Fluwood", "strDate - " + strDate);
+//                        Log.i("Fluwood", "code - " + code);
+
+                        // rightNow.
+
+                         sqlService.addReceipt(receipt);
+
+                    }
+                })
+                .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Обработка нажатия на кнопку Отмена
+                    }
+                })
+                .show();
+
     }
 }

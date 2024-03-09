@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import com.example.flywood.ekonomka.data.Product;
 import com.example.flywood.ekonomka.data.Receipt;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class SqlService extends SQLiteOpenHelper {
@@ -53,7 +55,9 @@ public class SqlService extends SQLiteOpenHelper {
         try {
             ContentValues values = new ContentValues();
             values.put("Name", receipt.getName());
-            values.put("Date", receipt.getDate().toString());
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String strDate = df.format( receipt.getDate().getTime());
+            values.put("Date", strDate);
 
             long id1 = db.insert("Receipts", null ,values);
             Log.i("FLYWOOD", "add id = " + id1);
