@@ -291,17 +291,8 @@ public class MainActivity extends AppCompatActivity {
                         receipt.setName(receiptName);
                         receipt.setDate(rightNow);
 
-
-
-
-
-//                        Log.i("Fluwood", "strDate - " + strDate);
-//                        Log.i("Fluwood", "code - " + code);
-
-                        // rightNow.
-
-                         sqlService.addReceipt(receipt);
-
+                        sqlService.addReceipt(receipt);
+                        EkonomkaState.currentReceiptMutableLiveData.setValue(new Receipt());
                     }
                 })
                 .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
