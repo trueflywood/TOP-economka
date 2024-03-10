@@ -60,20 +60,19 @@ public class MainActivity extends AppCompatActivity {
                 if (isGranted) {
                     showCamera(0);
                 } else {
-                    Toast.makeText(this, "Not Permission", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Нет разрешений на камеру", Toast.LENGTH_SHORT).show();
                 }
             });
 
     private ActivityResultLauncher<ScanOptions> qrCodeLauncher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() == null) {
-            Toast.makeText(this, "Отмена", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Отмена", Toast.LENGTH_SHORT).show();
         } else {
             setResult(result.getContents());
         }
     });
 
     private void setResult(String result) {
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         getNameByCode(result);
     }
 
@@ -188,10 +187,7 @@ public class MainActivity extends AppCompatActivity {
         menuSaveItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
-                Toast.makeText(MainActivity.this, "Menu Save", Toast.LENGTH_SHORT).show();
-
                 saveReceipt();
-
                 return true;
             }
         });
@@ -200,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
         menuClearItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
-                Toast.makeText(MainActivity.this, "Menu Clear", Toast.LENGTH_SHORT).show();
                 EkonomkaState.currentReceiptMutableLiveData.setValue(new Receipt());
                 EkonomkaState.currentReceiptSummMutableLiveData.setValue("= 0,00 р.");
                 return true;
@@ -234,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         ) == PackageManager.PERMISSION_GRANTED) {
             showCamera(0);
         } else if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-            Toast.makeText(context, "Разрешения на камеру обязвтельны", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Разрешения на камеру обязательны", Toast.LENGTH_SHORT).show();
         } else {
             resultPermissionLauncher.launch(Manifest.permission.CAMERA);
         }
@@ -266,8 +261,6 @@ public class MainActivity extends AppCompatActivity {
                         String price = editTextPrice.getText().toString();
 
                         EkonomkaState.addCurrentReceiptUnit(new Product(code, name, Float.parseFloat(price)));
-
-                        Toast.makeText(MainActivity.this, code, Toast.LENGTH_SHORT).show();
 
                     }
                 })

@@ -48,7 +48,6 @@ public class SavedRecript extends AppCompatActivity {
         Intent intent = getIntent();
         int receiptId = intent.getIntExtra("receiptId", -1);
 
-        Toast.makeText(this, "id = " + receiptId, Toast.LENGTH_SHORT).show();
         SqlService sqlService = new SqlService(this);
         Receipt receipt =  sqlService.getReceipt(receiptId);
 
