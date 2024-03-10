@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
@@ -198,10 +199,10 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(@NonNull MenuItem item) {
                 Toast.makeText(MainActivity.this, "Menu Clear", Toast.LENGTH_SHORT).show();
                 EkonomkaState.currentReceiptMutableLiveData.setValue(new Receipt());
+                EkonomkaState.currentReceiptSummMutableLiveData.setValue("= 0,00 р.");
                 return true;
             }
         });
-
 
         return true;
     }

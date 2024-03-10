@@ -1,6 +1,7 @@
 package com.example.flywood.ekonomka.ui.goods;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.flywood.ekonomka.R;
+import com.example.flywood.ekonomka.SavedRecript;
 import com.example.flywood.ekonomka.data.EkonomkaState;
 import com.example.flywood.ekonomka.data.Receipt;
 import com.example.flywood.ekonomka.data.services.SqlService;
@@ -43,7 +45,9 @@ public class ProductsFragment extends Fragment {
 
         final ListView receiptListUnitList = binding.receiptListUnitList;
 
-        ProductsListUnitAdapter productsListUnitAdapter =new ProductsListUnitAdapter(EkonomkaState.getCurrentListReceipt(), this.getContext(), R.layout.receipt_list_unit);
+        Context context = this.getContext();
+
+        ProductsListUnitAdapter productsListUnitAdapter =new ProductsListUnitAdapter(EkonomkaState.getCurrentListReceipt(), context, R.layout.receipt_list_unit);
 
         receiptListUnitList.setAdapter(productsListUnitAdapter);
 
@@ -59,7 +63,17 @@ public class ProductsFragment extends Fragment {
             }
         });
 
+        receiptListUnitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Receipt receipt = productsListUnitAdapter.getItem(position);
+                // Создаем объект Intent для новой активити
+                Intent intent = new Intent(context, SavedRecript.class);
+                intent.putExtra("receiptId", receipt.getId());
 
+                startActivity(intent);
+            }
+        });
         return root;
     }
 

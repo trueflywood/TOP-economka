@@ -151,4 +151,70 @@ public class SqlService extends SQLiteOpenHelper {
             db.close();
         }
     }
+
+    public  Receipt getReceipt(int id) {
+        Receipt receipt = new Receipt();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("select * from Receipts where Id=?", new String[]{""+id});
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Log.i("FLYWOOD", "count receipts - " + cursor.getCount());
+        if (cursor.moveToFirst()) {
+
+            int idIndex =  cursor.getColumnIndex("Id");
+            int nameIndex =  cursor.getColumnIndex("Name");
+            int dateIndex =  cursor.getColumnIndex("Date");
+            if (nameIndex >= 0 && dateIndex >= 0 && idIndex >= 0) {
+
+                do {
+                    try {
+                        String name = cursor.getString(nameIndex);
+                        String strDate = cursor.getString(dateIndex);
+
+                        Date date = df.parse(strDate);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(date);
+
+                        receipt = new Receipt(id, calendar, name);
+                        Log.i("FLYWOOD", "receipt = " + id + " | "+ strDate + " | " + name);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } while (cursor.moveToNext());
+            }
+        }
+
+        Cursor cursorProducts = db.rawQuery("select * from ReceiptUnit where IdReceipt=?", new String[]{"" + id});
+        Log.i("FLYWOOD", "count products - " + cursorProducts.getCount());
+
+        if (cursorProducts.moveToFirst()) {
+
+            int idIndex =  cursorProducts.getColumnIndex("Id");
+            int nameIndex =  cursorProducts.getColumnIndex("name");
+            int codeIndex =  cursorProducts.getColumnIndex("code");
+            int priceIndex =  cursorProducts.getColumnIndex("price");
+
+            Log.i("FLYWOOD", "count products - " + idIndex + " | " + nameIndex + " | " + codeIndex + " | " + priceIndex + " | ");
+
+            if (nameIndex >= 0 && codeIndex >= 0 && idIndex >= 0 && priceIndex >= 0) {
+
+                do {
+                    try {
+                        String name = cursorProducts.getString(nameIndex);
+                        String code = cursorProducts.getString(codeIndex);
+                        float price = cursorProducts.getFloat(priceIndex);
+
+                        receipt.addProduct(new Product(code, name, price));
+                        Log.i("FLYWOOD", "receipt = " + id + " | "+ code + " | " + name + " | " + price);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } while (cursorProducts.moveToNext());
+            }
+        }
+        db.close();
+        return receipt;
+    }
 }
