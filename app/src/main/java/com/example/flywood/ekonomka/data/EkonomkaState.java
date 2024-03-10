@@ -13,6 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EkonomkaState {
+
+    /**
+     * номер не известного товара
+     */
+    public static int unknownNumber = 1;
 //    public static Receipt currentReceipt = new Receipt();
     /**
      * текущий рецепт

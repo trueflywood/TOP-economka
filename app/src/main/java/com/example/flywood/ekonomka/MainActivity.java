@@ -84,28 +84,31 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
-                Log.i("Fluwood", response.body().status.toString());
-                Log.i("Fluwood", response.body().names.get(0));
+                if(response.code() == 200) {
+                    Log.i("Fluwood", response.body().status.toString());
+                    Log.i("Fluwood", response.body().names.get(0));
 
-                String status = response.body().status.toString();
-                Log.i("Fluwood", "status equals -" + status);
-                Log.i("Fluwood", "count -" + response.body().names.stream().count());
+                    String status = response.body().status.toString();
+                    Log.i("Fluwood", "status equals -" + status);
+                    Log.i("Fluwood", "count -" + response.body().names.stream().count());
 
-                if (status.equals("200")) {
-                    if(response.body().names.stream().count() > 0) {
+                    if (status.equals("200")) {
+                        if(response.body().names.stream().count() > 0) {
 
-                        String name = response.body().names.get(0);
-                        getBarcode(name, result);
+                            String name = response.body().names.get(0);
+                            getBarcode(name, result);
+                        }
                     }
+                } else {
+                    getBarcode("Товар " + (EkonomkaState.unknownNumber++), result);
                 }
             }
 
             @Override
             public void onFailure(Call<ProductResponse> call, Throwable t) {
-
+                getBarcode("Товар " + (EkonomkaState.unknownNumber++), result);
             }
         });
-
     }
 
 
