@@ -3,6 +3,7 @@ package com.example.flywood.ekonomka.data.services;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -109,6 +110,7 @@ public class SqlService extends SQLiteOpenHelper {
                } while (cursor.moveToNext());
            }
         }
+        db.close();
        return list;
     }
 
@@ -134,6 +136,18 @@ public class SqlService extends SQLiteOpenHelper {
             e.printStackTrace();
         } finally {
             db.endTransaction();
+            db.close();
+        }
+    }
+
+    public void removeReceiptUnit(int id) {
+        Log.i("FLYWOOD", "removeReceiptUnit - " + id);
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL("delete from Receipts where id = ?", new Object[]{id});
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             db.close();
         }
     }

@@ -1,8 +1,12 @@
 package com.example.flywood.ekonomka.data;
 
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import com.example.flywood.ekonomka.data.services.SqlService;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -82,6 +86,16 @@ public class EkonomkaState {
     public static void  setSavedListReceipt(List<Receipt> list) {
         currentReceiptListMutableLiveData.setValue(list);
     }
+
+    public static void  removeSavedListReceiptUnit(Context context, Receipt receipt) {
+        SqlService sqlService = new SqlService(context);
+        sqlService.removeReceiptUnit(receipt.getId());
+        List<Receipt> list = sqlService.getListReceipts();
+        EkonomkaState.setSavedListReceipt(list);
+    }
+
+
+
 
 
 }

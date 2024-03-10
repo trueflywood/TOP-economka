@@ -43,6 +43,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -158,6 +159,12 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 menu.clear();
+            }
+
+            if (navDestination.getId() == R.id.nav_goods) {
+                SqlService sqlService = new SqlService(this);
+                List<Receipt> list = sqlService.getListReceipts();
+                EkonomkaState.setSavedListReceipt(list);
             }
 
         });

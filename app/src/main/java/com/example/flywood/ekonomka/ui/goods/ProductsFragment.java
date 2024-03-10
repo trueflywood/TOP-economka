@@ -2,12 +2,17 @@ package com.example.flywood.ekonomka.ui.goods;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.flywood.ekonomka.R;
 import com.example.flywood.ekonomka.data.EkonomkaState;
 import com.example.flywood.ekonomka.data.Receipt;
+import com.example.flywood.ekonomka.data.services.SqlService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -43,6 +49,17 @@ public class ProductsFragment extends Fragment {
 
         EkonomkaState.getLiveListReceipt().observe(getViewLifecycleOwner(), productsListUnitAdapter::updateListReceipt);
 
+        receiptListUnitList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("FLYWOOD", "Удаление пункта в позиции " + position);
+                Receipt receipt = productsListUnitAdapter.getItem(position);
+                showPopupContextMenu(view, receipt);
+                return true;
+            }
+        });
+
+
         return root;
     }
 
@@ -50,6 +67,27 @@ public class ProductsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void showPopupContextMenu(View view, final Receipt receipt) {
+        Context context = this.getContext();
+        PopupMenu popup = new PopupMenu(context, view);
+        popup.inflate(R.menu.list_reciepts_context);
+//        MenuItem itemDelete = popup.getMenu().getItem(0);
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Log.i("FLYWOOD", "Удаление чекая с id -  " + receipt.getId());
+
+                //List<Receipt> list = EkonomkaState.getCurrentListReceipt();
+                EkonomkaState.removeSavedListReceiptUnit(context, receipt);
+                //list.remove(position - 1);
+                //EkonomkaState.setSavedListReceipt(list);
+                return true;
+            }
+        });
+        popup.show();
     }
 }
 
@@ -74,7 +112,7 @@ class ProductsListUnitAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Receipt getItem(int position) {
         return productsList.get(position);
     }
 
